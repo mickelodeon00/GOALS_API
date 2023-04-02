@@ -45,6 +45,11 @@ const loginUser = async (req, res) => {
         const {email, password} = req.body
         const user = await User.findOne({email})
 
+        if (!user) {
+            res.status(401)
+            throw new Error('Invalid Credentials')
+        }
+
         console.log(user, (await bcrypt.compare(password, user.password)))
 
         const token = await generateToken(user._id)
